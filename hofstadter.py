@@ -50,15 +50,35 @@ class Line:
 
         # Regex.
         elif self.text[self.index] == '"':
-            pass
+            escaped = False
+            self.index += 1
+            while self.text[self.index] != '"' or escaped:
+                if escaped:
+                    escaped = False
+                elif self.text[self.index] == '\\':
+                    escaped = True
+                self.index += 1
+                if self.index == length:
+                    abort("Regex string is not closed.")
+            self.index += 1
+            return ("R", self.text[start+1:self.index-1])    # Omit quotes.
 
         # URL.
         elif self.text.startswith("http"):
-            pass
+            while self.index < len(self.text) and not self.text[self.index].isspace():
+                self.index += 1
+            return ("U", self.text[start:self.index])
 
         # File path.
         else:
-            pass
+            escaped = False
+            while not self.text[self.index].isspace() or escaped and self.index < length:
+                if escaped:
+                    escaped = False
+                elif self.text[self.index] == '\\':
+                    escaped = True 
+                self.index += 1
+            return ("D", self.text[start:self.index])
 
 
 # TODO: Handle file opening exceptions.
