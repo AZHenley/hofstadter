@@ -81,7 +81,53 @@ class Line:
             return ("D", self.text[start:self.index])
 
 
-# TODO: Handle file opening exceptions.
-with open(sys.argv[1]) as f:
-    rawlines = f.readlines()
+class Evaluator:
+    def __init__(self, lines):
+        self.lines = lines
+        self.values = {}
+        self.nextLine = 0 # Next line to execute.
+        self.indices = [0] * len(lines) # Next token of each line to execute.
+        self.frozen = set()
 
+    def getValue(self, key):
+        if key in self.values:
+            return self.values[key]
+        return ""
+
+    def setValue(self, key, val):
+        if key != "0":
+            self.values[key] = val
+
+    def start(self):
+        while len(self.frozen) < len(self.lines):
+            self.tick()
+
+    def tick(self):
+        # Get next token to execute. 
+        line = self.lines[self.nextLine]
+        #if len(line.tokens) == 0: return    # Empty line. #TODO: Empty line at end of file...
+        #if self.nextLine in self.frozen: return # TODO: If this is last line...
+
+        if len(line.tokens) > 0 and self.nextLine not in self.frozen:
+            toktype, tokliteral = line.tokens[self.indices[self.nextLine]]
+
+            ### TODO: Execute!
+
+        # Update nextLine's new index.
+        self.indices[self.nextLine] += 1
+        if self.indices[self.nextLine] >= len(self.lines[self.nextLine].tokens):
+            #self.indices[self.nextLine] = 0
+            self.frozen.add(self.nextLine)
+        # Update nextLine.
+        self.nextLine += 1
+        if self.nextLine >= len(self.lines):
+            self.nextLine = 0
+
+
+try:
+    with open(sys.argv[1]) as f:
+        rawlines = f.readlines()
+except:
+        abort("Could not open source file.")
+evaluator = Evaluator([Line(x) for x in rawlines])
+evaluator.start()
