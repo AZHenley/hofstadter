@@ -2,12 +2,13 @@
 # Austin Z. Henley, 2021
 # http://www.austinhenley.com/
 
-import sys
+import sys, re, requests
 
 # Display error and abort.
 def abort(msg):
     sys.exit("Error: " + msg)
 
+# Manages a line of source code.
 class Line:
     def __init__(self, text):
         self.index = 0
@@ -81,6 +82,7 @@ class Line:
             return ("D", self.text[start:self.index])
 
 
+# Evaluates the program a token at a time in the correct order.
 class Evaluator:
     def __init__(self, lines):
         self.lines = lines
@@ -151,15 +153,49 @@ class Evaluator:
 
             # Run regex on current line's value.
             elif toktype == 'R':
-                pass
+                try:
+                    regex = re.compile(tokliteral)
+                    result = regex.search(self.getCurrentValue())
+                    if result:
+                        self.setCurrentValue(result.group())
+                    else:
+                        self.setCurrentValue("")
+                except Exception as err:
+                    abort("Invalid regex. " + str(err))
 
             # Either HTTP POST the current line's value or save the response from HTTP GET.
             elif toktype == 'U':
-                pass
+                # HTTP POST.
+                if self.getCurrentValue() != "":
+                    try:
+                        response = requests.post(tokliteral, data = self.getCurrentValue(), timeout = 0.5)
+                        self.setCurrentValue(response.text) # TODO: Should this save the response or throw it away?
+                    except:
+                        self.setCurrentValue("") # TODO: Should this record "" or do nothing?
+                # HTTP GET.
+                else:
+                    try:
+                        response = requests.get(tokliteral, timeout = 0.5)
+                        self.setCurrentValue(response.text)
+                    except:
+                        self.setCurrentValue("")
 
             # Either write the current line's value to file or read to it.
             elif toktype == 'D':
-                pass
+                # Write to file.
+                if self.getCurrentValue() != "":
+                    try:
+                        with open(tokliteral, 'w') as f:
+                            f.write(self.getCurrentValue())
+                    except:
+                        abort("Unable to write to file.")
+                # Read from file
+                else:
+                    try:
+                        with open(tokliteral, 'r') as f:
+                            self.setCurrentValue(f.read())
+                    except:
+                        abort("Unable to read from file.")
 
             # Famous last words: should never happen.
             else:
