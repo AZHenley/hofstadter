@@ -98,6 +98,12 @@ class Evaluator:
         if key != "0":
             self.values[key] = val
 
+    def getCurrentValue(self):
+        return self.getValue(str(self.nextLine+1))
+
+    def setCurrentValue(self, val):
+        self.setValue(str(self.nextLine+1), val)
+
     def start(self):
         while len(self.frozen) < len(self.lines):
             self.tick()
@@ -111,7 +117,53 @@ class Evaluator:
         if len(line.tokens) > 0 and self.nextLine not in self.frozen:
             toktype, tokliteral = line.tokens[self.indices[self.nextLine]]
 
-            ### TODO: Execute!
+            ### Execute!
+
+            # Either print current line's value or read input to it.
+            if toktype == '#':
+                # Stdout.
+                if self.getCurrentValue() != "":
+                    print(self.getCurrentValue())
+                # Stdin.
+                else:
+                    self.setCurrentValue(input())
+
+            # If equal, continue. Else, restart line.
+            elif toktype == '?':
+                if self.getCurrentValue() != self.getValue(tokliteral):
+                    self.indices[self.nextLine] = -1
+
+            # If not equal, continue. Else, restart line.
+            elif toktype == '!':
+                if self.getCurrentValue() == self.getValue(tokliteral):
+                    self.indices[self.nextLine] = -1
+
+            # Swap value with specified line's value.
+            elif toktype == '@':
+                tmp = self.getValue(tokliteral)
+                self.setValue(tokliteral, self.getCurrentValue())
+                self.setCurrentValue(tmp)
+
+            # Concatenate current line's value with specified line's value and store.
+            elif toktype == '+':
+                other = self.getValue(tokliteral)
+                self.setCurrentValue(self.getCurrentValue() + other)
+
+            # Run regex on current line's value.
+            elif toktype == 'R':
+                pass
+
+            # Either HTTP POST the current line's value or save the response from HTTP GET.
+            elif toktype == 'U':
+                pass
+
+            # Either write the current line's value to file or read to it.
+            elif toktype == 'D':
+                pass
+
+            # Famous last words: should never happen.
+            else:
+                abort("Unknown token.")
 
         # Update nextLine's new index.
         self.indices[self.nextLine] += 1
