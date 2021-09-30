@@ -6,7 +6,7 @@ The Hofstadter esoteric programming language executes every line concurrently, i
 
 The commands are as follows:
 
-Action | Example | Description
+Action | Example code | Description
 ------ | ------- | -----------
 HTTP request | http://www.austinhenley.com | If the line's data is empty, performs a HTTP GET at the specified URL and stores the result in data. If the line's data is not empty, performs a HTTP POST at the specified URL with the line's data as the request's body and stores the response in data.
 Regex | "a(bc)*" | Runs the specified regex on the line's data and stores the first match back in the line's data.
@@ -18,7 +18,7 @@ Swap data | @5 | Swaps the line's data with the specified line's data.
 Concatenate | +5 | Concatenates the line's data with the specified line's data and stores it in the line's data.
 
 
-Lines are 1-indexed. You can swap with lines that do not exist as extra storage (but they must be positive numbers). Line 0 always contains the empty string, no matter what you swap to it (`@0` is effectively a clear). When lines restart or end, they retain their value.
+Lines are 1-indexed. You can swap with lines that do not exist as extra storage (but they must be positive numbers). Line 0 always contains the empty string, no matter what you swap to it (`@0` is effectively a clear). When lines restart or end, they retain their value. Commands are expected to be space separated.
 
 
 
