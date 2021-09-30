@@ -20,6 +20,14 @@ Concatenate | +5 | Concatenates the line's data with the specified line's data a
 
 Lines are 1-indexed. You can swap with lines that do not exist as extra storage (but they must be positive numbers). Line 0 always contains the empty string, no matter what you swap to it (`@0` is effectively a clear). When lines restart or end, they retain their value. Commands are expected to be space separated.
 
+### Example: Counting to 99.
+
+Todo.
+
+### Example: Two digit adder.
+
+Todo.
+
 
 
 
