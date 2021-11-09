@@ -73,7 +73,7 @@ class Line:
         # File path.
         else:
             escaped = False
-            while not self.text[self.index].isspace() or escaped and self.index < length:
+            while self.index < length and not self.text[self.index].isspace() or escaped:
                 if escaped:
                     escaped = False
                 elif self.text[self.index] == '\\':
