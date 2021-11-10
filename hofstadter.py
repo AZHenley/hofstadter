@@ -212,10 +212,16 @@ class Evaluator:
             self.nextLine = 0
 
 
-try:
-    with open(sys.argv[1]) as f:
-        rawlines = f.readlines()
-except:
+def main(file=sys.argv[1]):
+    try:
+        with open(file, 'r') as f:
+            lines = [Line(l) for l in f.readlines()]
+    except:
         abort("Could not open source file.")
-evaluator = Evaluator([Line(x) for x in rawlines])
-evaluator.start()
+
+    evaluator = Evaluator(lines)
+    evaluator.start()
+
+# if this is the main program, run main()
+if __name__ == '__main__':
+    main()
