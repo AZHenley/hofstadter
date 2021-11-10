@@ -217,7 +217,7 @@ def main(file=sys.argv[1]):
         with open(file, 'r') as f:
             lines = [Line(l) for l in f.readlines()]
     except:
-        abort("Unable to read from file.")
+        abort("Could not open source file.")
 
     evaluator = Evaluator(lines)
     evaluator.start()
