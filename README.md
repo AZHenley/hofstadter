@@ -2,7 +2,7 @@
 
 > Hofstadter's Law: It always takes longer than you expect, even when you take into account Hofstadter's Law.
 
-The Hofstadter esoteric programming language executes every line concurrently, in round-robin style. There are only 8 commands and each line can only store a single string value. 
+The Hofstadter esoteric programming language executes every line concurrently, in round-robin style. There are only 9 commands and each line can only store a single string value. 
 
 The commands are as follows:
 
@@ -16,6 +16,7 @@ Conditional | ?5 | If the line's data is equal to the specified line's data, con
 Conditional | !5 | If the line's data is not equal to the specified line's data, continue. Else, restart the execution of this line from the start but keep the data.
 Swap data | @5 | Swaps the line's data with the specified line's data.
 Concatenate | +5 | Concatenates the line's data with the specified line's data and stores it in the line's data.
+Set data | ="Hello World!" | Sets the line's data with the specified string. Must use double quotes.
 
 
 Lines are 1-indexed. You can swap with lines that do not exist as extra storage (but they must be positive numbers). Line 0 always contains the empty string, no matter what you swap to it (`@0` is effectively a clear). Swapping with the current line is effectively a no-op. When lines restart, they retain their value. Commands are expected to be space separated.

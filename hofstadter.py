@@ -24,7 +24,7 @@ class Line:
             if t is not None:
                 self.tokens.append(t)
 
-    # Gets next token. The 8 legal commands are: # ? ! @ + "regex" https://url.com/ /filepath.txt 
+    # Gets next token. The 9 legal commands are: = # ? ! @ + "regex" https://url.com/ /filepath.txt 
     def nextToken(self):
         length = len(self.text)
         # Skip all leading whitespace.
@@ -69,6 +69,23 @@ class Line:
             while self.index < len(self.text) and not self.text[self.index].isspace():
                 self.index += 1
             return ("U", self.text[start:self.index])
+        
+        # Set Value
+        elif self.text[self.index] == "=":
+            self.index += 1
+            if self.text[self.index] != '"':
+                abort("String not opened")
+            self.index += 1
+    
+            while self.index < length and not self.text[self.index] == '"':
+                self.index += 1
+            returnValue = (self.text[start], self.text[start+2:self.index])
+
+            if self.text[self.index] != '"':
+                abort("String not closed")
+
+            self.index += 1
+            return returnValue
 
         # File path.
         else:
@@ -145,6 +162,10 @@ class Evaluator:
                 tmp = self.getValue(tokliteral)
                 self.setValue(tokliteral, self.getCurrentValue())
                 self.setCurrentValue(tmp)
+            
+            # Set current line's value.
+            elif toktype == "=":
+                self.setCurrentValue(str(tokliteral))
 
             # Concatenate current line's value with specified line's value and store.
             elif toktype == '+':
