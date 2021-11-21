@@ -1,0 +1,11 @@
+Number_Of_States:
+3
+States:
+q0 start
+q1
+q2 accept
+Transitions:
+q0 q1 1 1 RIGHT
+q1 q0 1 1 RIGHT
+q0 q2 _ E RIGHT
+q0 q0 ~ 0 RIGHT
