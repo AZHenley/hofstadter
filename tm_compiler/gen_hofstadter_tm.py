@@ -24,7 +24,7 @@ class transition():
 #---- Make sure we have all of the arguments needed (tape_input) is not nessesary
 # Just give it what it wants, I really don't want to do any error checcking
 if len(sys.argv) < 3:
-    print("python gen_hofstadter_tm.py [TM_File] [Tape_length] (Tape_input)")
+    print("python gen_hofstadter_tm.py [TM_File] [Tape_length] \"Tape_input\"")
     exit()
 elif len(sys.argv) == 4 and int(sys.argv[2]) < len(sys.argv[3]):
     print("Tape_input is longer than Tape_length")
@@ -42,6 +42,8 @@ alphabet = []
 for char in tape_input:
     if char not in alphabet and char != "~":
         alphabet.append(char)
+print(sys.argv[3])
+
 #---- Generate the hash line (used to terminate when tape is done printing) and other values
 f = open("tm_values/hash_line.txt", 'w')
 f.write("####################################")
@@ -56,6 +58,9 @@ f.write("accept")
 f.close()
 f = open("tm_values/reject.txt", 'w')
 f.write("reject")
+f.close()
+f = open("tm_values/new_line.txt", 'w')
+f.write("\n")
 f.close()
 
 #---- Gen state info
@@ -79,6 +84,9 @@ for f in os.listdir("states"):
     os.remove("states/"+f)
 for f in os.listdir("alphabet"):
     os.remove("alphabet/"+f)
+f = open("tm_out.txt", 'w')
+f.close()
+os.remove("tm_out.txt")
 
 #---- Generate the needed files for defining input 
 for i in range(tape_length):
@@ -165,7 +173,7 @@ for i in range(len(states)):
         break
 hofstadter_tm.write("tape_ids/tape_0_id.txt\n") # Starting tape poisition @ end_of_tape_and_states + 2
 line_count += 1
-hofstadter_tm.write("tape_inputs/tape_0.txt\n") # starting tape value @ end_of_tape_and_states + 3 ###### <- We actually might not use this line
+hofstadter_tm.write("+3\n") # starting tape value @ end_of_tape_and_states + 3 ###### <- We actually might not use this line
 line_count += 1
 hofstadter_tm.write("tm_values/running.txt\n") # is the machine running, rejected, or accepted? (initialize to running) @ end_of_tape_and_states + 4 
 line_count += 1
@@ -231,7 +239,8 @@ for i in range(4):                                 ############# range of 3?
 hofstadter_tm.write("@0 +1 +1 ")
 for i in range(38):
     hofstadter_tm.write("@"+clock_pos+" ")
-hofstadter_tm.write("# !"+clock_pos+'\n')
+#hofstadter_tm.write("# !"+clock_pos+'\n')
+hofstadter_tm.write("!"+clock_pos+'\n')
 
 
 print(states_dict)
@@ -261,27 +270,36 @@ for t in range(tape_length):
             if c in [x.reading_str for x in s.transitions_from]:
                 k = [x.reading_str for x in s.transitions_from].index(c)
                 print_curr_state = "@0 +"+str(current_state)+" # " #    print_curr_state+print_curr_read+
-                trans_write = "@0 +"+str(alphabet_dict[s.transitions_from[k].writing_str])+" # @"+str(tape_val_dict[str(t)])+' '
-                trans_to_state = "@0 +"+str(states_dict[s.transitions_from[k].to_state])+" # @"+str(current_state)+' '
+                #trans_write = "@0 +"+str(alphabet_dict[s.transitions_from[k].writing_str])+" # @"+str(tape_val_dict[str(t)])+' '
+                trans_write = "@0 +"+str(alphabet_dict[s.transitions_from[k].writing_str])+" @"+str(tape_val_dict[str(t)])+' '
+                #trans_to_state = "@0 +"+str(states_dict[s.transitions_from[k].to_state])+" # @"+str(current_state)+' '
+                trans_to_state = "@0 +"+str(states_dict[s.transitions_from[k].to_state])+" @"+str(current_state)+' '
                 trans_move = None
                 line_count += 1
                 repeat = " !"+str(line_count)+'\n'
                 if s.transitions_from[k].movement == "RIGHT":
                     if t == tape_length - 1: # If we are at the last tape position
-                        trans_move = "@0 +"+str(tape_val_dict[str(t)])+" # @"+str(current_tape_pos)
+                        #trans_move = "@0 +"+str(tape_val_dict[str(t)])+" # @"+str(current_tape_pos)
+                        trans_move = "@0 +"+str(tape_val_dict[str(t)])+" @"+str(current_tape_pos)
                     else: # We can indeed move to the right
-                        trans_move = "@0 +"+str(tape_val_dict[str(t)]+1)+" # @"+str(current_tape_pos)
+                        #trans_move = "@0 +"+str(tape_val_dict[str(t)]+1)+" # @"+str(current_tape_pos)
+                        trans_move = "@0 +"+str(tape_val_dict[str(t)]+1)+" @"+str(current_tape_pos)
                 else:
                     if t == 0: # If we are at the first tape position
-                        trans_move = "@0 +"+str(tape_val_dict[str(t)])+" # @"+str(current_tape_pos)
+                        #trans_move = "@0 +"+str(tape_val_dict[str(t)])+" # @"+str(current_tape_pos)
+                        trans_move = "@0 +"+str(tape_val_dict[str(t)])+" @"+str(current_tape_pos)
                     else: # We can indeed move to the left
-                        trans_move = "@0 +"+str(tape_val_dict[str(t)]-3)+" # @"+str(current_tape_pos)
+                        #trans_move = "@0 +"+str(tape_val_dict[str(t)]-3)+" # @"+str(current_tape_pos)
+                        trans_move = "@0 +"+str(tape_val_dict[str(t)]-3)+" @"+str(current_tape_pos)
                 
-                hofstadter_tm.write(on_clock+tape_check+state_check+character_check+running_check+print_curr_state+print_curr_read+trans_write+trans_to_state+trans_move+repeat) # Maybe we should have more than one, so that we can assign all values together (one immediately following the other)
+                #hofstadter_tm.write(on_clock+tape_check+state_check+character_check+running_check+print_curr_state+print_curr_read+trans_write+trans_to_state+trans_move+repeat) # Maybe we should have more than one, so that we can assign all values together (one immediately following the other)
+                hofstadter_tm.write(on_clock+tape_check+state_check+character_check+running_check+trans_write+trans_to_state+trans_move+repeat)
             else:
                 line_count += 1
                 repeat = " !"+str(line_count)+'\n'
-                hofstadter_tm.write(on_clock+tape_check+state_check+character_check+running_check+print_curr_state+print_curr_read+"@0 +"+str(accept_reject_on_finish)+" # @"+str(machine_state)+repeat)
+                #hofstadter_tm.write(on_clock+tape_check+state_check+character_check+running_check+print_curr_state+print_curr_read+"@0 +"+str(accept_reject_on_finish)+" # @"+str(machine_state)+repeat)
+                hofstadter_tm.write(on_clock+tape_check+state_check+character_check+running_check+"@0 +"+str(accept_reject_on_finish)+" @"+str(machine_state)+repeat)
+
 
 
     #-- Printing line data
@@ -294,6 +312,15 @@ for t in range(tape_length):
     
 line_count += 1
 hofstadter_tm.write(on_clock+"@0 @0 @0 @0 @0 +1 # !"+str(line_count)+'\n')
+
+hofstadter_tm.write("tm_values/new_line.txt\n")
+line_count += 1
+
+hofstadter_tm.write(running_check + " ?0 +"+str(machine_state)+" +"+str(line_count)+' ')
+for i, t in enumerate(tape_val_dict):
+    hofstadter_tm.write('+'+str(tape_val_dict[t])+' ')
+hofstadter_tm.write(" tm_out.txt")
+line_count += 1
 
 
 hofstadter_tm.close()
