@@ -30,6 +30,11 @@ elif len(sys.argv) == 4 and int(sys.argv[2]) < len(sys.argv[3]):
     print("Tape_input is longer than Tape_length")
     exit()
 
+folders = ["tm_values", "tape_ids", "tape_inputs", "states", "alphabet"]
+for folder in folders:
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+
 
 #---- Get the arguments provided
 hofstadter_tm = open("hofstadter_tm.txt", 'w')
