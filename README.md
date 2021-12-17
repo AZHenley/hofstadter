@@ -2,7 +2,7 @@
 
 > Hofstadter's Law: It always takes longer than you expect, even when you take into account Hofstadter's Law.
 
-The Hofstadter esoteric programming language executes every line concurrently in round-robin style (one command per line). There are only 8 commands and each line can only store a single string value. There is [discussion](https://github.com/AZHenley/hofstadter/pull/8) that the language is not Turing complete.
+The Hofstadter esoteric programming language executes every line concurrently in round-robin style (one command per line). There are only 8 commands and each line can only store a single string value. There is debate about whether the language [is](https://github.com/AZHenley/hofstadter/pull/11) or [is not](https://github.com/AZHenley/hofstadter/pull/8) Turing complete.
 
 The commands are as follows:
 
