@@ -1,0 +1,58 @@
+Number_Of_States:(Use STEM.jar to make a turing machine)
+11
+States:
+q0 start
+q1
+q2
+q3
+q4
+q5
+q6
+q7
+q8
+q9 accept
+q10
+Transitions:
+q0 q1 1 F RIGHT
+q1 q1 1 1 RIGHT
+q1 q2 _ _ LEFT
+q2 q3 1 N LEFT
+q3 q3 1 1 LEFT
+q3 q4 ~ ~ RIGHT
+q4 q4 ~ ~ RIGHT
+q4 q5 1 k RIGHT
+q5 q5 ~ ~ LEFT
+q5 q5 k c LEFT
+q5 q6 F F RIGHT
+q6 q6 c c RIGHT
+q6 q7 ~ ~ LEFT
+q7 q7 ~ ~ LEFT
+q7 q8 c k RIGHT
+q8 q8 k k RIGHT
+q8 q7 1 0 LEFT
+q7 q9 F F RIGHT
+q9 q9 k k RIGHT
+q9 q9 0 0 RIGHT
+q9 q5 1 i LEFT
+q8 q8 0 0 RIGHT
+q8 q3 N N LEFT
+q3 q3 0 1 LEFT
+q5 q6 c c RIGHT
+q5 q10 N t RIGHT
+q4 q10 N t RIGHT
+q9 q0 N N RIGHT
+q2 q0 F F RIGHT
+q0 q2 _ f RIGHT
+q2 q3 _ a RIGHT
+q3 q8 _ l RIGHT
+q8 q7 _ s RIGHT
+q10 q4 _ r RIGHT
+q4 q5 _ u RIGHT
+q5 q9 _ e RIGHT
+q8 q8 i i RIGHT
+q9 q9 i i RIGHT
+q3 q3 i I LEFT
+q8 q7 I i LEFT
+q9 q5 I i LEFT
+q4 q4 I k RIGHT
+q7 q8 _ e LEFT
