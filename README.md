@@ -9,7 +9,7 @@ The commands are as follows:
 Action | Example code | Description
 ------ | ------- | -----------
 HTTP request | http://www.austinhenley.com | If the line's data is empty, performs a HTTP GET at the specified URL and stores the result in data. If the line's data is not empty, performs a HTTP POST at the specified URL with the line's data as the request's body and stores the response in data.
-Regex | "a(bc)*" | Runs the specified regex on the line's data and stores the first match back in the line's data.
+Regex | "a(bc)*" | Runs the specified regex that is enclosed in double quotes on the line's data and stores the first match back in the line's data.
 File IO | foo.txt | If the line's data is empty, reads the specified file's contents to the line's data. If the line's data is not empty, writes the line's data to the specified file. Can be a relative or absolute path.
 Console IO | # |  If the line's data is empty, reads from stdin into the line's data. If data is not empty, write tp stdout.
 Conditional | ?5 | If the line's data is equal to the specified line's data, continue. Else, restart the execution of this line from the start but keep the data.
