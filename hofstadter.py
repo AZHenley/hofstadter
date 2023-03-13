@@ -65,7 +65,7 @@ class Line:
             return ("R", self.text[start+1:self.index-1])    # Omit quotes.
 
         # URL.
-        elif self.text.startswith("http"):
+        elif self.text[self.index:self.index+4] == "http":
             while self.index < len(self.text) and not self.text[self.index].isspace():
                 self.index += 1
             return ("U", self.text[start:self.index])
